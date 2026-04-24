@@ -22,6 +22,8 @@ import UserLogin from "./pages/UserLogin";
 // ✅ IMPORT GALLERY
 import Gallery from "./components/Gallery";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
@@ -39,16 +41,22 @@ function App() {
         {/* ✅ IMPORTANT */}
         <Route path="/gallery" element={<Gallery />} />
 
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/branch/:id" element={<Branch />} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute requiredRole="admin"><Dashboard /></ProtectedRoute>} />
+        <Route path="/branch/:id" element={<ProtectedRoute requiredRole="admin"><Branch /></ProtectedRoute>} />
+        
+        {/* Donate handles its own lock UI if not logged in */}
         <Route path="/donate" element={<Donate />} />
         <Route path="/donate/:type" element={<DonationForm />} />
-        <Route path="/my-donations" element={<MyDonations />} />
-        <Route path="/admin/donations" element={<AdminDonations />} />
-        <Route path="/volunteer" element={<Volunteer />} />
-        <Route path="/branch/:id/admission" element={<Admission />} />
-        <Route path="/branch/:id/discharge" element={<Discharge />} />
-        <Route path="/branch/:id/records" element={<Records />} />
+        
+        {/* User Protected Routes */}
+        <Route path="/my-donations" element={<ProtectedRoute requiredRole="user"><MyDonations /></ProtectedRoute>} />
+        
+        {/* Admin Protected Routes */}
+        <Route path="/admin/donations" element={<ProtectedRoute requiredRole="admin"><AdminDonations /></ProtectedRoute>} />
+        <Route path="/volunteer" element={<ProtectedRoute requiredRole="admin"><Volunteer /></ProtectedRoute>} />
+        <Route path="/branch/:id/admission" element={<ProtectedRoute requiredRole="admin"><Admission /></ProtectedRoute>} />
+        <Route path="/branch/:id/discharge" element={<ProtectedRoute requiredRole="admin"><Discharge /></ProtectedRoute>} />
+        <Route path="/branch/:id/records" element={<ProtectedRoute requiredRole="admin"><Records /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

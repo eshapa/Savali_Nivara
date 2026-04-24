@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { User, Mail, Lock, Heart, ArrowRight } from "lucide-react";
+import API_URL from "../config";
 
 function UserLogin() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ function UserLogin() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/user/login", { email, password });
+      const res = await axios.post(`${API_URL}/api/auth/user/login`, { email, password });
       localStorage.setItem("userToken", res.data.token);
       localStorage.setItem("userName", res.data.user.name);
       alert("Login successful!");

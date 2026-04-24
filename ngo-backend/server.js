@@ -26,6 +26,11 @@ app.use("/api/admissions", admissionRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/ai", aiRoutes);
 
+// Root Route
+app.get("/", (req, res) => {
+  res.send("Savali Nivara API is running...");
+});
+
 // DB connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
@@ -38,3 +43,5 @@ mongoose.connect(process.env.MONGODB_URI)
     });
   })
   .catch((err) => console.error("MongoDB Connection Error:", err));
+
+module.exports = app;

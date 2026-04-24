@@ -70,11 +70,13 @@ function Navbar() {
             ABOUT
           </Link>
 
-          {adminToken ? (
+          {!userToken && adminToken && (
             <Link to="/admin/dashboard" className={isActive("/admin/dashboard") ? "text-yellow-400" : "hover:text-yellow-400 transition"}>
               DASHBOARD
             </Link>
-          ) : (
+          )}
+          
+          {!userToken && !adminToken && (
             <Link to="/signup" className={isActive("/signup") ? "text-yellow-400" : "hover:text-yellow-400 transition"}>
               ADMIN
             </Link>

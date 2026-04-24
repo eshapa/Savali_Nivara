@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Heart, Users, Shield, Send, CheckCircle, ArrowLeft, Star, Quote } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import API_URL from "../config";
 
 function Volunteer() {
   const [formData, setFormData] = useState({
@@ -30,7 +31,7 @@ function Volunteer() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await axios.post("http://localhost:5000/api/volunteers", formData);
+      await axios.post(`${API_URL}/api/volunteers`, formData);
       setSubmitted(true);
       setFormData({ name: "", email: "", phone: "", interest: "Education", message: "" });
       setTimeout(() => setSubmitted(false), 5000);

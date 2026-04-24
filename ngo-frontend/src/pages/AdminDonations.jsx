@@ -17,6 +17,7 @@ import {
   MoreVertical
 } from "lucide-react";
 import axios from "axios";
+import API_URL from "../config";
 import { Link, useNavigate } from "react-router-dom";
 
 const AdminDonations = () => {
@@ -41,7 +42,7 @@ const AdminDonations = () => {
     }
 
     try {
-      const response = await axios.get("http://localhost:5000/api/donations", {
+      const response = await axios.get(`${API_URL}/api/donations`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -65,7 +66,7 @@ const AdminDonations = () => {
   const handleStatusUpdate = async (id, newStatus) => {
     const token = localStorage.getItem("adminToken");
     try {
-      await axios.put(`http://localhost:5000/api/donations/${id}`, { status: newStatus }, {
+      await axios.put(`${API_URL}/api/donations/${id}`, { status: newStatus }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

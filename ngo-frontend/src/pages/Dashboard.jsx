@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import API_URL from "../config";
 import {
   Building2,
   Users,
@@ -48,7 +49,7 @@ function Dashboard() {
 
   const fetchRecentActivity = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/admissions?limit=5");
+      const response = await fetch(`${API_URL}/api/admissions?limit=5`);
       const data = await response.json();
       setRecentActivity(data);
     } catch (error) {
@@ -60,7 +61,7 @@ function Dashboard() {
 
   const fetchBranchStats = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/admissions/stats");
+      const response = await fetch(`${API_URL}/api/admissions/stats`);
       if (!response.ok) throw new Error("Server error");
       const data = await response.json();
       
@@ -78,7 +79,7 @@ function Dashboard() {
 
   const fetchContactMessages = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/contact");
+      const response = await fetch(`${API_URL}/api/contact`);
       const data = await response.json();
       setContactMessages(data);
     } catch (error) {

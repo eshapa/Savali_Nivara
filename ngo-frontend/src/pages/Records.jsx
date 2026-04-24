@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config";
 import toast from "react-hot-toast";
 import { 
   Building2, 
@@ -52,7 +53,7 @@ function Records() {
   const fetchRecords = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/admissions?branchId=${branchId}`);
+      const response = await axios.get(`${API_URL}/api/admissions?branchId=${branchId}`);
       const data = response.data;
       if (Array.isArray(data)) {
         setRecords(data);
@@ -258,7 +259,7 @@ function Records() {
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 shadow-sm flex-shrink-0">
                             {record.photo ? (
-                              <img src={`http://localhost:5000/${record.photo}`} className="w-full h-full object-cover" />
+                              <img src={`${API_URL}/${record.photo}`} className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-slate-400 font-black">
                                 {record.name?.charAt(0)}
@@ -295,12 +296,12 @@ function Records() {
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-2">
                           {record.photo && (
-                            <a href={`http://localhost:5000/${record.photo}`} target="_blank" rel="noreferrer" className="p-2 bg-slate-100 hover:bg-blue-100 text-slate-500 hover:text-blue-600 rounded-lg transition-all title='Photo'">
+                            <a href={`${API_URL}/${record.photo}`} target="_blank" rel="noreferrer" className="p-2 bg-slate-100 hover:bg-blue-100 text-slate-500 hover:text-blue-600 rounded-lg transition-all title='Photo'">
                               <ImageIcon size={16} />
                             </a>
                           )}
                           {record.pdf && (
-                            <a href={`http://localhost:5000/${record.pdf}`} target="_blank" rel="noreferrer" className="p-2 bg-slate-100 hover:bg-emerald-100 text-slate-500 hover:text-emerald-600 rounded-lg transition-all title='PDF Document'">
+                            <a href={`${API_URL}/${record.pdf}`} target="_blank" rel="noreferrer" className="p-2 bg-slate-100 hover:bg-emerald-100 text-slate-500 hover:text-emerald-600 rounded-lg transition-all title='PDF Document'">
                               <FileText size={16} />
                             </a>
                           )}

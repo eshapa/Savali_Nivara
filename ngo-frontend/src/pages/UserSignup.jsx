@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { User, Mail, Lock, Heart, ArrowRight } from "lucide-react";
+import API_URL from "../config";
 
 function UserSignup() {
   const [name, setName] = useState("");
@@ -20,7 +21,7 @@ function UserSignup() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/auth/user/signup", { name, email, password });
+      await axios.post(`${API_URL}/api/auth/user/signup`, { name, email, password });
       alert("Signup successful! Please login.");
       navigate("/user-login");
     } catch (err) {

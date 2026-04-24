@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config";
 import { 
   UserMinus, 
   Search, 
@@ -38,7 +39,7 @@ function Discharge() {
 
   const fetchActiveAdmissions = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/admissions?branchId=${branchId}&status=admitted`);
+      const response = await axios.get(`${API_URL}/api/admissions?branchId=${branchId}&status=admitted`);
       setActiveAdmissions(response.data);
     } catch (error) {
       console.error("Error fetching admissions:", error);
@@ -53,7 +54,7 @@ function Discharge() {
 
     setIsLoading(true);
     try {
-      await axios.put(`http://localhost:5000/api/admissions/${selectedPatient._id}/discharge`, {
+      await axios.put(`${API_URL}/api/admissions/${selectedPatient._id}/discharge`, {
         branchId: branchId,
         dischargeDetails: formData
       });
@@ -134,7 +135,7 @@ function Discharge() {
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
                           {patient.photo ? (
-                            <img src={`http://localhost:5000/${patient.photo}`} className="w-full h-full object-cover" />
+                            <img src={`${API_URL}/${patient.photo}`} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">
                               {patient.name?.charAt(0)}
@@ -167,7 +168,7 @@ function Discharge() {
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/20">
                   {selectedPatient.photo ? (
-                    <img src={`http://localhost:5000/${selectedPatient.photo}`} className="w-full h-full object-cover" />
+                    <img src={`${API_URL}/${selectedPatient.photo}`} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full bg-slate-700 flex items-center justify-center text-white font-black text-xl">
                       {selectedPatient.name?.charAt(0)}

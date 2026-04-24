@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, User, Mail, Lock, Shield, ArrowRight } from "lucide-react";
+import API_URL from "../config";
 
 function Signup() {
   const [isLogin, setIsLogin] = useState(true); // Default to login
@@ -53,7 +54,7 @@ function Signup() {
     setIsLoading(true);
     try {
       if (isLogin) {
-        const res = await axios.post("http://localhost:5000/api/auth/admin/login", {
+        const res = await axios.post(`${API_URL}/api/auth/admin/login`, {
           email: data.email,
           password: data.password,
         });
@@ -61,7 +62,7 @@ function Signup() {
         localStorage.setItem("adminRole", res.data.role);
         navigate("/admin/dashboard");
       } else {
-        await axios.post("http://localhost:5000/api/auth/admin/signup", {
+        await axios.post(`${API_URL}/api/auth/admin/signup`, {
           name: data.name,
           email: data.email,
           password: data.password,

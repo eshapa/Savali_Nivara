@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Sparkles, Loader2, ChevronRight, Lightbulb } from "lucide-react";
 import axios from "axios";
+import API_URL from "../config";
 
 const DonationAISuggestions = () => {
   const [suggestions, setSuggestions] = useState([]);
@@ -11,7 +12,7 @@ const DonationAISuggestions = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post("http://localhost:5000/api/ai/donation-suggestions");
+      const response = await axios.post(`${API_URL}/api/ai/donation-suggestions`);
       setSuggestions(response.data.suggestions);
     } catch (err) {
       console.error("Error fetching AI suggestions:", err);

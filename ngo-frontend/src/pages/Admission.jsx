@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config";
 import { 
   User, 
   UserPlus, 
@@ -79,7 +80,7 @@ function Admission() {
     if (files.signature) data.append("signature", files.signature);
 
     try {
-      await axios.post("http://localhost:5000/api/admissions", data, {
+      await axios.post(`${API_URL}/api/admissions`, data, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       alert("Admission record created successfully!");

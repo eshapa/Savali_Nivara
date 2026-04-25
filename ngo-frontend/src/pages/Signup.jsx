@@ -202,29 +202,25 @@ function Signup() {
             )}
           </button>
 
-          <div className="toggle-auth">
-            <p>
-              {isLogin ? "Don't have admin access?" : "Already have admin credentials?"}{" "}
-              <span
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setErrors({});
-                  setData({
-                    name: "",
-                    email: "",
-                    password: "",
-                    confirmPassword: ""
-                  });
-                }}
-              >
-                {isLogin ? "Request Access" : "Login to Admin"}
-              </span>
-            </p>
+          {/* No Signup Toggle - Admin Login Only */}
+          <div className="security-footer">
+            <p>This is a restricted area. Authorized personnel only.</p>
           </div>
         </div>
       </div>
 
       <style>{`
+        .security-footer {
+          text-align: center;
+          margin-top: 24px;
+          padding-top: 20px;
+          border-top: 1px solid #f1f5f9;
+        }
+        .security-footer p {
+          font-size: 12px;
+          color: #94a3b8;
+          font-weight: 500;
+        }
         .page-bg-admin {
           min-height: 100vh;
           display: flex;

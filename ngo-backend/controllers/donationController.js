@@ -31,7 +31,9 @@ const getAllDonations = async (req, res) => {
   try {
     const donations = await Donation.find({})
       .populate("userId", "name email")
+      .populate("processedBy", "name")
       .sort("-createdAt");
+    console.log(`Backend: Found ${donations.length} donations`);
     res.json(donations);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -60,6 +62,8 @@ const updateDonationStatus = async (req, res) => {
 
     if (donation) {
       donation.status = status || donation.status;
+      donation.processedBy = req.user.id;
+      donation.processedAt = Date.now();
       const updatedDonation = await donation.save();
       res.json(updatedDonation);
     } else {
@@ -70,9 +74,37 @@ const updateDonationStatus = async (req, res) => {
   }
 };
 
+// @desc    Get donation stats (Admin)
+// @route   GET /api/donations/stats
+// @access  Private/Admin
+const getDonationStats = async (req, res) => {
+  try {
+    const totalDonations = await Donation.countDocuments();
+    const pendingDonations = await Donation.countDocuments({ status: "pending" });
+    const approvedDonations = await Donation.countDocuments({ status: "approved" });
+    const completedDonations = await Donation.countDocuments({ status: "completed" });
+    
+    // Get stats by type
+    const statsByType = await Donation.aggregate([
+      { $group: { _id: "$type", count: { $sum: 1 } } }
+    ]);
+
+    res.json({
+      total: totalDonations,
+      pending: pendingDonations,
+      approved: approvedDonations,
+      completed: completedDonations,
+      byType: statsByType
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createDonation,
   getAllDonations,
   getUserDonations,
   updateDonationStatus,
+  getDonationStats,
 };

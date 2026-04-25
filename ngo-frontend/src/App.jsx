@@ -43,14 +43,14 @@ function App() {
 
         <Route path="/admin/dashboard" element={<ProtectedRoute requiredRole="admin"><Dashboard /></ProtectedRoute>} />
         <Route path="/branch/:id" element={<ProtectedRoute requiredRole="admin"><Branch /></ProtectedRoute>} />
-        
+
         {/* Donate handles its own lock UI if not logged in */}
         <Route path="/donate" element={<Donate />} />
         <Route path="/donate/:type" element={<DonationForm />} />
-        
+
         {/* User Protected Routes */}
         <Route path="/my-donations" element={<ProtectedRoute requiredRole="user"><MyDonations /></ProtectedRoute>} />
-        
+
         {/* Admin Protected Routes */}
         <Route path="/admin/donations" element={<ProtectedRoute requiredRole="admin"><AdminDonations /></ProtectedRoute>} />
         <Route path="/volunteer" element={<ProtectedRoute requiredRole="admin"><Volunteer /></ProtectedRoute>} />
@@ -61,5 +61,6 @@ function App() {
     </BrowserRouter>
   );
 }
+
 
 export default App;

@@ -24,8 +24,7 @@ function Navbar() {
 
   return (
     <header className="w-full">
-
-      {/* 🔝 Top Bar */}
+      {/* Top Bar */}
       <div className="bg-[#1f6f5d] text-white py-3 px-6 lg:px-20 flex justify-between items-center text-sm font-medium">
         <div className="flex gap-6 items-center">
           <span>🏠 तुकाराम नगर, पिंपरी, पुणे</span>
@@ -44,6 +43,16 @@ function Navbar() {
                 LOGOUT
               </button>
             </div>
+          ) : adminToken ? (
+            <div className="flex items-center gap-3">
+              <span className="text-yellow-400 font-bold">Admin Mode</span>
+              <button 
+                onClick={() => handleLogout('admin')}
+                className="bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-xs transition font-black"
+              >
+                LOGOUT
+              </button>
+            </div>
           ) : (
             <Link to="/user-login" className="hover:text-yellow-400 transition">USER LOGIN</Link>
           )}
@@ -57,12 +66,10 @@ function Navbar() {
         </div>
       </div>
 
-      {/* 🔥 Main Navbar */}
+      {/* Main Navbar */}
       <div className="bg-gray-100 py-4 px-6 lg:px-20 flex justify-center relative">
-
         <div className="hidden lg:flex bg-[#1f6f5d] px-8 py-3 rounded-full items-center gap-8 text-white font-semibold shadow-md">
-
-          <Link to="/" className={isActive("/") ? "text-yellow-400" : "hover:text-yellow-400 Transition"}>
+          <Link to="/" className={isActive("/") ? "text-yellow-400" : "hover:text-yellow-400 transition"}>
             HOME
           </Link>
 

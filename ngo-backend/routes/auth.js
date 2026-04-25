@@ -6,28 +6,9 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Admin = require("../models/Admin");
 
-// ✅ Admin Signup
+// ❌ Admin Signup (DISABLED FOR SECURITY)
 router.post("/admin/signup", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ msg: "Please enter all fields" });
-
-    const existingAdmin = await Admin.findOne({ email });
-    if (existingAdmin) return res.status(400).json({ msg: "Admin already exists" });
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new Admin({
-      name,
-      email,
-      password: hashedPassword,
-      role: 'admin'
-    });
-
-    await newAdmin.save();
-    res.json({ msg: "Admin Signup successful" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  res.status(403).json({ msg: "Admin registration is disabled. Please contact system administrator." });
 });
 
 // ✅ User Signup

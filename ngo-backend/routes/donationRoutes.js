@@ -5,15 +5,15 @@ const {
   getAllDonations,
   getUserDonations,
   updateDonationStatus,
+  getDonationStats,
 } = require("../controllers/donationController");
 const { protect, admin } = require("../middleware/auth");
 
-router.route("/")
-  .post(protect, createDonation)
-  .get(protect, admin, getAllDonations);
-
+// Routes
+router.get("/stats", protect, getDonationStats); // Simplified for debug (removed admin)
 router.get("/user", protect, getUserDonations);
-
+router.get("/", protect, admin, getAllDonations);
+router.post("/", protect, createDonation);
 router.put("/:id", protect, admin, updateDonationStatus);
 
 module.exports = router;

@@ -13,33 +13,21 @@ import { generateCertificate } from "../utils/certificateGenerator";
 
 // ==================== Status Configuration ====================
 const STATUS_CONFIG = {
-  submitted: {
-    label: 'Submitted', icon: Clock, color: 'text-amber-600', bgColor: 'bg-amber-50',
-    steps: ['Submitted', 'Review', 'Pickup', 'Received', 'Distributed']
+  pending: {
+    label: 'Pending Review', icon: Clock, color: 'text-amber-600', bgColor: 'bg-amber-50',
+    steps: ['Submitted', 'Review', 'Approved', 'Completed']
   },
-  reviewed: {
-    label: 'Under Review', icon: Search, color: 'text-blue-600', bgColor: 'bg-blue-50',
-    steps: ['Submitted', 'Review', 'Pickup', 'Received', 'Distributed']
-  },
-  pickup_scheduled: {
-    label: 'Pickup Scheduled', icon: Package, color: 'text-indigo-600', bgColor: 'bg-indigo-50',
-    steps: ['Submitted', 'Review', 'Pickup', 'Received', 'Distributed']
-  },
-  received: {
-    label: 'Received', icon: CheckCircle2, color: 'text-emerald-600', bgColor: 'bg-emerald-50',
-    steps: ['Submitted', 'Review', 'Pickup', 'Received', 'Distributed']
-  },
-  distributed: {
-    label: 'Distributed', icon: Heart, color: 'text-green-700', bgColor: 'bg-green-100',
-    steps: ['Submitted', 'Review', 'Pickup', 'Received', 'Distributed']
-  },
-  processing: {
-    label: 'Processing', icon: Clock, color: 'text-amber-600', bgColor: 'bg-amber-50',
-    steps: ['Submitted', 'Review', 'Pickup', 'Received', 'Distributed']
+  approved: {
+    label: 'Approved', icon: CheckCircle2, color: 'text-blue-600', bgColor: 'bg-blue-50',
+    steps: ['Submitted', 'Review', 'Approved', 'Completed']
   },
   completed: {
-    label: 'Completed', icon: CheckCircle2, color: 'text-green-600', bgColor: 'bg-green-50',
-    steps: ['Submitted', 'Review', 'Pickup', 'Received', 'Distributed']
+    label: 'Completed', icon: Heart, color: 'text-emerald-600', bgColor: 'bg-emerald-50',
+    steps: ['Submitted', 'Review', 'Approved', 'Completed']
+  },
+  cancelled: {
+    label: 'Cancelled', icon: XCircle, color: 'text-rose-600', bgColor: 'bg-rose-50',
+    steps: ['Submitted', 'Review', 'Approved', 'Cancelled']
   }
 };
 

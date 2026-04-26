@@ -42,6 +42,12 @@ function Dashboard() {
   const [donationError, setDonationError] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
 
+  // Password Change State
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
+  const [passwordMessage, setPasswordMessage] = useState({ type: "", text: "" });
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
     if (!token) {
@@ -124,6 +130,34 @@ function Dashboard() {
     }
   };
 
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      return setPasswordMessage({ type: "error", text: "New passwords do not match" });
+    }
+    setIsChangingPassword(true);
+    setPasswordMessage({ type: "", text: "" });
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await axios.put(`${API_URL}/api/auth/admin/change-password`, {
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setPasswordMessage({ type: "success", text: "Password changed successfully!" });
+      setTimeout(() => {
+        setShowPasswordModal(false);
+        setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        setPasswordMessage({ type: "", text: "" });
+      }, 2000);
+    } catch (err) {
+      setPasswordMessage({ type: "error", text: err.response?.data?.msg || "Failed to change password" });
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
   const fetchBranchStats = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/admissions/stats`);
@@ -200,19 +234,23 @@ function Dashboard() {
     }
   ];
 
+  const totalBeneficiaries = Object.values(branchStats).reduce((acc, curr) => acc + (curr.active || 0), 0);
+  const totalAdmissionsToday = Object.values(branchStats).reduce((acc, curr) => acc + (curr.todayAdmissions || 0), 0);
+  const allTimeAdmissions = Object.values(branchStats).reduce((acc, curr) => acc + (curr.total || 0), 0);
+
   const quickStats = [
     {
       icon: Users,
       label: "Total Beneficiaries",
-      value: "85",
-      change: "+2 today",
+      value: totalBeneficiaries.toString(),
+      change: `+${totalAdmissionsToday} today`,
       color: "text-emerald-600",
       bgColor: "bg-emerald-100"
     },
     {
       icon: Building2,
       label: "Active Centers",
-      value: "3",
+      value: Object.keys(branchStats).length > 0 ? Object.keys(branchStats).length.toString() : "3",
       change: "All operational",
       color: "text-emerald-600",
       bgColor: "bg-emerald-100"
@@ -227,9 +265,9 @@ function Dashboard() {
     },
     {
       icon: TrendingUp,
-      label: "Today's Admissions",
-      value: ((branchStats[1]?.todayAdmissions || 0) + (branchStats[2]?.todayAdmissions || 0) + (branchStats[3]?.todayAdmissions || 0)).toString(),
-      change: "Across all centers",
+      label: "Total Admissions",
+      value: allTimeAdmissions.toString(),
+      change: `+${totalAdmissionsToday} today`,
       color: "text-emerald-600",
       bgColor: "bg-emerald-100"
     }
@@ -257,14 +295,22 @@ function Dashboard() {
             <h2 className="text-3xl font-extrabold text-slate-900">Welcome back, {adminName}!</h2>
             <p className="text-slate-500 font-medium mt-1">Manage your centers, beneficiaries, and programs</p>
           </div>
-          <div className="bg-slate-100 px-5 py-2.5 rounded-xl flex items-center gap-2.5 text-slate-600 font-bold text-sm">
-            <Calendar size={14} />
-            <span>{new Date().toLocaleDateString('en-US', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}</span>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setShowPasswordModal(true)}
+              className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold transition-all"
+            >
+              <Settings size={16} /> Change Password
+            </button>
+            <div className="bg-slate-100 px-5 py-2.5 rounded-xl flex items-center gap-2.5 text-slate-600 font-bold text-sm">
+              <Calendar size={14} />
+              <span>{new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}</span>
+            </div>
           </div>
         </div>
 
@@ -535,6 +581,73 @@ function Dashboard() {
             </table>
           </div>
         </div>
+
+        {/* Password Change Modal */}
+        {showPasswordModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-[32px] p-8 w-full max-w-md shadow-2xl relative">
+              <button 
+                onClick={() => setShowPasswordModal(false)}
+                className="absolute top-6 right-6 text-slate-400 hover:text-slate-600"
+              >
+                <X size={24} />
+              </button>
+              
+              <h2 className="text-2xl font-black text-slate-900 mb-2">Change Password</h2>
+              <p className="text-slate-500 text-sm font-medium mb-6">Update your admin access credentials</p>
+
+              {passwordMessage.text && (
+                <div className={`p-4 rounded-xl mb-6 font-bold text-sm flex items-center gap-2 ${
+                  passwordMessage.type === 'error' ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600'
+                }`}>
+                  {passwordMessage.type === 'error' ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
+                  {passwordMessage.text}
+                </div>
+              )}
+
+              <form onSubmit={handleChangePassword} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Current Password</label>
+                  <input 
+                    type="password" 
+                    required
+                    value={passwordForm.currentPassword}
+                    onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">New Password</label>
+                  <input 
+                    type="password" 
+                    required
+                    value={passwordForm.newPassword}
+                    onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Confirm New Password</label>
+                  <input 
+                    type="password" 
+                    required
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                  />
+                </div>
+                
+                <button 
+                  type="submit" 
+                  disabled={isChangingPassword}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 rounded-xl mt-4 transition-colors disabled:opacity-50 flex justify-center items-center gap-2"
+                >
+                  {isChangingPassword ? "Updating..." : "Update Password"}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
       </main>
     </div>

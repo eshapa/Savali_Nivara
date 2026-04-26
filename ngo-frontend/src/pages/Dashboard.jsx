@@ -205,8 +205,8 @@ function Dashboard() {
       location: "Pimpri-Chinchwad, Pune",
       totalFamilies: branchStats[1]?.total || 0,
       activeMembers: branchStats[1]?.active || 0,
-      children: Math.floor((branchStats[1]?.active || 0) * 0.3),
-      elderly: Math.floor((branchStats[1]?.active || 0) * 0.1),
+      male: branchStats[1]?.male || 0,
+      female: branchStats[1]?.female || 0,
       todayAdmissions: branchStats[1]?.todayAdmissions || 0,
       todayDischarges: branchStats[1]?.todayDischarges || 0
     },
@@ -216,8 +216,8 @@ function Dashboard() {
       location: "Rajguru Nagar, Pune",
       totalFamilies: branchStats[2]?.total || 0,
       activeMembers: branchStats[2]?.active || 0,
-      children: Math.floor((branchStats[2]?.active || 0) * 0.3),
-      elderly: Math.floor((branchStats[2]?.active || 0) * 0.1),
+      male: branchStats[2]?.male || 0,
+      female: branchStats[2]?.female || 0,
       todayAdmissions: branchStats[2]?.todayAdmissions || 0,
       todayDischarges: branchStats[2]?.todayDischarges || 0
     },
@@ -227,8 +227,8 @@ function Dashboard() {
       location: "YCM Hospital, Pimpri",
       totalFamilies: branchStats[3]?.total || 0,
       activeMembers: branchStats[3]?.active || 0,
-      children: Math.floor((branchStats[3]?.active || 0) * 0.3),
-      elderly: Math.floor((branchStats[3]?.active || 0) * 0.1),
+      male: branchStats[3]?.male || 0,
+      female: branchStats[3]?.female || 0,
       todayAdmissions: branchStats[3]?.todayAdmissions || 0,
       todayDischarges: branchStats[3]?.todayDischarges || 0
     }
@@ -378,17 +378,17 @@ function Dashboard() {
                         <Users size={16} />
                       </div>
                       <div>
-                        <span className="block text-xs font-black text-slate-900">{branch.children}</span>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase">Children</span>
+                        <span className="block text-xs font-black text-slate-900">{branch.male}</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase">Male</span>
                       </div>
                     </div>
                     <div className="flex-1 bg-slate-50 p-3 rounded-xl flex items-center gap-3">
-                      <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600">
+                      <div className="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center text-pink-600">
                         <Users size={16} />
                       </div>
                       <div>
-                        <span className="block text-xs font-black text-slate-900">{branch.elderly}</span>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase">Elderly</span>
+                        <span className="block text-xs font-black text-slate-900">{branch.female}</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase">Female</span>
                       </div>
                     </div>
                   </div>

@@ -141,6 +141,12 @@ router.get("/stats", async (req, res) => {
               active: { $sum: 1 },
               todayAdmissions: {
                 $sum: { $cond: [{ $gte: ["$createdAt", today] }, 1, 0] }
+              },
+              male: {
+                $sum: { $cond: [{ $eq: ["$gender", "Male"] }, 1, 0] }
+              },
+              female: {
+                $sum: { $cond: [{ $eq: ["$gender", "Female"] }, 1, 0] }
               }
             }
           }
@@ -159,7 +165,7 @@ router.get("/stats", async (req, res) => {
         ])
       ]);
 
-      const a = admissionStats[0] || { active: 0, todayAdmissions: 0 };
+      const a = admissionStats[0] || { active: 0, todayAdmissions: 0, male: 0, female: 0 };
       const d = dischargeStats[0] || { discharged: 0, todayDischarges: 0 };
 
       return {
@@ -168,7 +174,9 @@ router.get("/stats", async (req, res) => {
         active: a.active,
         discharged: d.discharged,
         todayAdmissions: a.todayAdmissions,
-        todayDischarges: d.todayDischarges
+        todayDischarges: d.todayDischarges,
+        male: a.male,
+        female: a.female
       };
     };
 

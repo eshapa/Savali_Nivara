@@ -92,7 +92,8 @@ h6 {
   animation-delay: 0.5s;
 }
 
-/* NAVBAR */
+/* NAVBAR - Commented out as it interferes with modern Navbar component */
+/* 
 nav {
   background: linear-gradient(90deg, #0f172a, #1e3a8a);
   padding: 16px 40px;
@@ -113,6 +114,7 @@ nav a {
 nav a:hover {
   color: #38bdf8;
 }
+*/
 
 /* PAGE BACKGROUND */
 .page-bg {

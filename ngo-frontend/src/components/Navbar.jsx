@@ -38,9 +38,9 @@ function Navbar() {
   if (userToken) {
     navLinks.push({ name: "MY DONATIONS", path: "/my-donations", icon: <Heart size={18} /> });
   } else if (adminToken) {
-    navLinks.push({ name: "DASHBOARD", path: "/admin/dashboard", icon: <LayoutDashboard size={18} /> });
+    navLinks.push({ name: "ADMIN DASHBOARD", path: "/admin/dashboard", icon: <LayoutDashboard size={18} /> });
   } else {
-    navLinks.push({ name: "ADMIN", path: "/signup", icon: <User size={18} /> });
+    navLinks.push({ name: "ADMIN LOGIN", path: "/signup", icon: <User size={18} /> });
   }
 
   return (

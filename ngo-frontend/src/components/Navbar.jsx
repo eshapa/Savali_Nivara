@@ -90,33 +90,37 @@ function Navbar() {
       {/* Main Navbar */}
       <div className="bg-white py-3 px-4 lg:px-20 flex justify-between items-center shadow-sm relative">
         {/* Logo */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 w-20 sm:w-24 lg:w-28">
           <Link to="/" onClick={() => setIsMenuOpen(false)}>
-            <img src={logo} alt="logo" className="w-20 sm:w-24 lg:w-28 transition-all" />
+            <img src={logo} alt="logo" className="w-full transition-all" />
           </Link>
         </div>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden lg:flex bg-[#1f6f5d] px-8 py-2.5 rounded-full items-center gap-8 text-white font-semibold shadow-md">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.path}
-              to={link.path} 
-              className={isActive(link.path) ? "text-yellow-400 scale-105 transition-transform" : "hover:text-yellow-400 transition-colors"}
-            >
-              {link.name}
-            </Link>
-          ))}
+        <div className="hidden lg:flex justify-center flex-1 mx-4">
+          <div className="bg-[#1f6f5d] px-6 xl:px-8 py-2.5 rounded-full flex items-center gap-4 xl:gap-8 text-white font-[500] text-sm shadow-md">
+            {navLinks.map((link) => (
+              <Link 
+                key={link.path}
+                to={link.path} 
+                className={isActive(link.path) ? "text-yellow-400 scale-105 transition-transform whitespace-nowrap font-bold" : "hover:text-yellow-400 transition-colors whitespace-nowrap"}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
         </div>
 
-        {/* Mobile Menu Toggle Button */}
-        <button 
-          className="lg:hidden p-2 text-[#1f6f5d] hover:bg-gray-100 rounded-lg transition-colors"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+        {/* Mobile Menu Toggle Button / Desktop Right Spacer */}
+        <div className="flex-shrink-0 w-20 sm:w-24 lg:w-28 flex justify-end">
+          <button 
+            className="lg:hidden p-2 text-[#1f6f5d] hover:bg-gray-100 rounded-lg transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Overlay */}

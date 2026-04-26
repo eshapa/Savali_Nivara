@@ -1,7 +1,24 @@
 import { jsPDF } from "jspdf";
 
-export const generateCertificate = (donation) => {
-  console.log("Generating certificate for:", donation);
+const getBase64ImageFromURL = (url) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.setAttribute("crossOrigin", "anonymous");
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = error => reject(error);
+    img.src = url;
+  });
+};
+
+export const generateCertificate = async (donation) => {
+  console.log("Generating premium certificate for:", donation);
   
   if (!donation) {
     console.error("No donation data provided to generateCertificate");
@@ -15,18 +32,43 @@ export const generateCertificate = (donation) => {
       format: "a4",
     });
 
-    // Background color - light cream
-    doc.setFillColor(252, 251, 246);
+    // 1. Load the NGO Logo
+    let logoBase64 = null;
+    try {
+      logoBase64 = await getBase64ImageFromURL('/logo.png');
+    } catch (err) {
+      console.error("Could not load logo for certificate", err);
+    }
+
+    // 2. Premium Background and Borders
+    doc.setFillColor(252, 251, 246); // Cream background
     doc.rect(0, 0, 297, 210, "F");
 
-    // Premium Border
-    doc.setDrawColor(31, 111, 93); // #1f6f5d
-    doc.setLineWidth(3);
+    // Outer thick border
+    doc.setDrawColor(31, 111, 93); // Theme Emerald
+    doc.setLineWidth(4);
     doc.rect(10, 10, 277, 190);
     
-    doc.setDrawColor(212, 175, 55); // Gold inner border
-    doc.setLineWidth(1);
+    // Inner thin gold border
+    doc.setDrawColor(212, 175, 55); // Gold
+    doc.setLineWidth(0.8);
     doc.rect(14, 14, 269, 182);
+    
+    // Corner ornaments (simple classy lines)
+    doc.setDrawColor(212, 175, 55);
+    doc.setLineWidth(1.5);
+    // Top Left
+    doc.line(20, 20, 40, 20);
+    doc.line(20, 20, 20, 40);
+    // Top Right
+    doc.line(277, 20, 257, 20);
+    doc.line(277, 20, 277, 40);
+    // Bottom Left
+    doc.line(20, 190, 40, 190);
+    doc.line(20, 190, 20, 170);
+    // Bottom Right
+    doc.line(277, 190, 257, 190);
+    doc.line(277, 190, 277, 170);
 
     const userName = localStorage.getItem("userName") || "Valued Donor";
     const createdAt = donation.createdAt || new Date();
@@ -36,31 +78,36 @@ export const generateCertificate = (donation) => {
       year: "numeric",
     });
 
-    // Organization Header
+    // 3. Header Section with Logo
+    if (logoBase64) {
+      doc.addImage(logoBase64, 'PNG', 133.5, 22, 30, 30);
+    }
+    
     doc.setTextColor(31, 111, 93);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(28);
-    doc.text("SAVALI NIVARA NGO", 148.5, 40, { align: "center" });
+    doc.setFontSize(32);
+    doc.text("SAVALI NIVARA NGO", 148.5, 65, { align: "center" });
     
-    doc.setFontSize(14);
-    doc.setTextColor(100, 100, 100);
-    doc.setFont("helvetica", "normal");
-    doc.text("Certificate of Appreciation", 148.5, 52, { align: "center" });
+    doc.setFontSize(16);
+    doc.setTextColor(212, 175, 55); // Gold
+    doc.text("CERTIFICATE OF APPRECIATION", 148.5, 78, { align: "center" });
 
+    // Decorative divider
     doc.setDrawColor(212, 175, 55);
     doc.setLineWidth(0.5);
-    doc.line(100, 58, 197, 58);
+    doc.line(100, 86, 197, 86);
 
-    // Main Text
+    // 4. Main Text
     doc.setFontSize(16);
-    doc.setTextColor(50, 50, 50);
-    doc.text("This certificate is proudly presented to", 148.5, 80, { align: "center" });
+    doc.setTextColor(70, 70, 70);
+    doc.setFont("helvetica", "italic");
+    doc.text("This is proudly presented to", 148.5, 105, { align: "center" });
 
     // Donor Name
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(36);
+    doc.setFontSize(40);
     doc.setTextColor(31, 111, 93);
-    doc.text(userName, 148.5, 105, { align: "center" });
+    doc.text(userName, 148.5, 125, { align: "center" });
 
     // Appreciation Message
     doc.setFont("helvetica", "normal");
@@ -71,34 +118,34 @@ export const generateCertificate = (donation) => {
     const typeText = type === 'money' ? 'Monetary Support' : `${type.toUpperCase()} Donation`;
     const amtText = donation.details?.amount ? ` of INR ${donation.details.amount}` : '';
     
-    doc.text(`In deep appreciation for your generous ${typeText}${amtText},`, 148.5, 130, { align: "center" });
-    doc.text(`which enables us to provide care and shelter to residents in need.`, 148.5, 140, { align: "center" });
+    doc.text(`In profound appreciation of your generous ${typeText}${amtText},`, 148.5, 145, { align: "center" });
+    doc.text(`which serves as a beacon of hope, enabling us to provide care,`, 148.5, 155, { align: "center" });
+    doc.text(`shelter, and a dignified life to the residents of our centers.`, 148.5, 165, { align: "center" });
 
-    // Footer Details
+    // 5. Footer Details
     doc.setFontSize(12);
     doc.setTextColor(100, 100, 100);
+    doc.setFont("helvetica", "bold");
     
-    doc.text(`Date: ${dateStr}`, 40, 170);
+    // Left footer - Details
+    doc.text("ISSUANCE DETAILS", 30, 175);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Date: ${dateStr}`, 30, 183);
     const donationId = donation._id || "NEW-DONATION";
-    doc.text(`Ref ID: ${donationId.toString().substring(0, 8).toUpperCase()}`, 40, 180);
-    if(donation.branch) doc.text(`Branch: ${donation.branch}`, 40, 190);
+    doc.text(`Ref ID: ${donationId.toString().substring(0, 8).toUpperCase()}`, 30, 191);
 
-    // Signature Mock
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.line(220, 175, 270, 175);
-    
+    // Right footer - Logo instead of signature
+    if (logoBase64) {
+      doc.addImage(logoBase64, 'PNG', 235, 160, 25, 25);
+    }
     doc.setFont("helvetica", "bold");
     doc.setTextColor(31, 111, 93);
-    doc.text("Authorized Signatory", 245, 182, { align: "center" });
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 100, 100);
-    doc.text("Savali Nivara Trust", 245, 188, { align: "center" });
+    doc.text("Savali Nivara Trust", 247.5, 191, { align: "center" });
 
     // Save the PDF
     const fileName = `Savali_Nivara_Certificate_${donationId.toString().substring(0, 6)}.pdf`;
     doc.save(fileName);
-    console.log("Certificate saved as", fileName);
+    console.log("Premium Certificate saved as", fileName);
   } catch (error) {
     console.error("Error generating certificate:", error);
   }
